@@ -129,7 +129,7 @@ def load():
             with open("plants.json", "r", encoding="utf-8") as f:
                 plants = json.load(f)
             print("Loaded.")
-            view()  # <-- Bu sətir əlavə edildi: məlumatları göstərəcək
+            view()  
         else:
             print("plants.json not found. Please save first.")
     except json.JSONDecodeError:
