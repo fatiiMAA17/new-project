@@ -1,0 +1,1739 @@
+#*******************************************************1
+# There are a number of people who will be attending ACM-ICPC World Finals.
+def acm_team(topic: list[str]) -> list[int]:
+    n = len(topic)
+    max_topics = 0
+    team_count = 0
+
+    for i in range(n):
+        for j in range(i + 1, n):
+            topics_known = 0
+            for k in range(len(topic[i])):
+                if topic[i][k] == '1' or topic[j][k] == '1':
+                    topics_known += 1
+            if topics_known > max_topics:
+                max_topics = topics_known
+                team_count = 1
+            elif topics_known == max_topics:
+                team_count += 1
+
+    return [max_topics, team_count]
+Input 1: ["10101", "11110", "00010"]
+Output 1: [5, 1]
+#********************************************************2
+# Given a string, remove characters until the string is made up of any two...
+def alternate(s: str) -> int:
+    unique_chars = []
+    for c in s:
+        if c not in unique_chars:
+            unique_chars.append(c)
+
+    max_length = 0
+
+    for i in range(len(unique_chars)):
+        for j in range(i + 1, len(unique_chars)):
+            a = unique_chars[i]
+            b = unique_chars[j]
+            filtered = ''
+            for ch in s:
+                if ch == a or ch == b:
+                    filtered += ch
+            valid = True
+            for k in range(1, len(filtered)):
+                if filtered[k] == filtered[k - 1]:
+                    valid = False
+                    break
+
+            if valid:
+                max_length = max(max_length, len(filtered))
+
+    return max_length
+Input 1: "abcbd"
+Output 1: 3
+
+#********************************************************3
+# We can represent a sentence as an array of words, for example...
+def are_sentences_similar(sentence1: list[str], sentence2: list[str], similarPairs: list[list[str]]) -> bool:
+    if len(sentence1) != len(sentence2):
+        return False
+    similar_map = {}
+    for a, b in similarPairs:
+        if a not in similar_map:
+            similar_map[a] = set()
+        if b not in similar_map:
+            similar_map[b] = set()
+        similar_map[a].add(b)
+        similar_map[b].add(a)
+    for i in range(len(sentence1)):
+        w1 = sentence1[i]
+        w2 = sentence2[i]
+        if w1 == w2:
+            continue
+        if w1 not in similar_map or w2 not in similar_map[w1]:
+            return False 
+    return True
+Input 1: ["great", "acting", "skills"], ["fine", "drama", "talent"], [["great", "fine"], ["drama", "acting"], ["skill
+Output 1: true
+#********************************************************4
+# Watson gives Sherlock an array of integers.
+def balancedSums(arr: list[int]) -> str:
+    total = 0
+    for num in arr:
+        total += num
+    left_sum = 0
+    for i in range(len(arr)):
+        if left_sum == (total - arr[i] - left_sum):
+            return "YES"
+        left_sum += arr[i]
+    return "NO"
+Input 1: [1, 2, 3]
+Output 1: "NO"
+#********************************************************5
+# Given two strings s and goal, return true if you can swap...
+def buddy_strings(s: str, goal: str) -> bool:
+    if len(s) != len(goal):
+        return False
+    if s == goal:
+        return len(set(s)) < len(s)  
+    diff = []
+    for i in range(len(s)):
+        if s[i] != goal[i]:
+            diff.append(i)
+    return len(diff) == 2 and s[diff[0]] == goal[diff[1]] and s[diff[1]] == goal[diff[0]]
+Input 1: "ab", "ba"
+Output 1: true
+#********************************************************6
+# Julius Caesar protected his confidential info by encrypting a cipher.
+def caesarCipher(s: str, k: int) -> str:
+    lower_case = "abcdefghijklmnopqrstuvwxyz"
+    upper_case = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    result = []
+    k = k % 26
+    for char in s:
+        if char in lower_case:  
+            index = lower_case.index(char)
+            new_char = lower_case[(index + k) % 26]
+            result.append(new_char)
+        elif char in upper_case: 
+            index = upper_case.index(char)
+            new_char = upper_case[(index + k) % 26]
+            result.append(new_char)
+        else: 
+            result.append(char)
+
+    return ''.join(result)
+    Input 1: "middle-Outz", 2
+Output 1: "okffng-Qwvb"
+#*******************************************************7
+# Dothraki are planning an attack to usurp King Robert's home.
+def can_form_palindrome(s: str) -> str:
+    freq = {}
+
+    for char in s:
+        if char in freq:
+            freq[char] += 1
+        else:
+            freq[char] = 1
+
+    odd_count = 0
+    for count in freq.values():
+        if count % 2 != 0:
+            odd_count += 1
+    if odd_count <= 1:
+        return "YES"
+    else:
+        return "NO"
+Input 1: "aabb"
+Output 1: "YES"
+#*******************************************************8
+# You have a long flowerbed in which some of the plots are planted...
+def can_place_flowers(flowerbed: list[int], n: int) -> bool:
+    count = 0
+    for i in range(len(flowerbed)):
+        if flowerbed[i] == 0:
+            prev_empty = (i == 0 or flowerbed[i - 1] == 0)
+            next_empty = (i == len(flowerbed) - 1 or flowerbed[i + 1] == 0)
+            if prev_empty and next_empty:
+                flowerbed[i] = 1
+                count += 1
+        if count >= n:
+            return True
+    return count >= n
+Input 1: [1, 0, 1, 0, 1], 1
+Output 1: false
+#*******************************************************9
+# You are given a square map as a matrix of integer strings.
+def cavityMap(grid: list[str]) -> list[str]:
+    rows = len(grid)
+    
+    cols = len(grid[0])
+    
+    result = [list(row) for row in grid]
+    
+    for i in range(1, rows - 1):
+        for j in range(1, cols - 1):
+            if (grid[i][j] > grid[i-1][j] and grid[i][j] > grid[i+1][j] and
+                grid[i][j] > grid[i][j-1] and grid[i][j] > grid[i][j+1]):
+                result[i][j] = 'X'
+    return [''.join(row) for row in result]
+Input 1: ["989", "191", "111"]
+Output 1: ["989", "1X1", "111"]
+
+#*******************************************************10
+# Little Bobby loves chocolate. He frequently goes to his favourite...
+def chocolateFeast(n: int, c: int, m: int) -> int:
+    chocolates = n // c
+    wrappers = chocolates  
+
+    while wrappers >= m:
+        new_chocolates = wrappers // m
+        chocolates += new_chocolates
+
+        wrappers = wrappers % m + new_chocolates  
+    
+    return chocolates
+Input 1: 15, 3, 2
+Output 1: 9
+#*******************************************************11
+# Sorting is useful as the first step in many different tasks.
+def closestNumbers(arr: list[int]) -> list[int]:
+    for i in range(len(arr)):
+        for j in range(i + 1, len(arr)):
+            if arr[j] < arr[i]:
+                arr[i], arr[j] = arr[j], arr[i]
+
+    first = arr[1] - arr[0]
+    if first < 0:
+        first = -first
+    min_diff = first
+
+    for i in range(1, len(arr) - 1):
+        diff = arr[i + 1] - arr[i]
+        if diff < 0:
+            diff = -diff
+        if diff < min_diff:
+            min_diff = diff
+
+    result = []
+    for i in range(len(arr) - 1):
+        diff = arr[i + 1] - arr[i]
+        if diff < 0:
+            diff = -diff
+        if diff == min_diff:
+            result.append(arr[i])
+            result.append(arr[i + 1])
+
+    return result
+Input 1: [1, 2, 3, 4, 5]
+Output 1: [1, 2, 2, 3, 3, 4, 4, 5]
+#*******************************************************12
+# Lily likes to play with integers. She has created a new game...
+def beautifulDays(i: int, j: int, k: int) -> int:
+    count = 0
+    for day in range(i, j + 1):
+        n = day
+        rev = 0
+        while n > 0:
+            rev = rev * 10 + (n % 10)
+            n = n // 10
+
+        diff = day - rev
+        if diff < 0:
+            diff = -diff
+        if diff % k == 0:
+            count += 1
+    return count
+Input 1: 20, 23, 6
+Output 1: 2
+
+#*******************************************************13
+# You are given an integer array coins representing...denominations...
+def coin_change_combinations(coins, amount):
+    dp = [0] * (amount + 1)
+    dp[0] = 1
+    for coin in coins:
+        for i in range(coin, amount + 1):
+            dp[i] = dp[i] + dp[i - coin]
+
+    return dp[amount]
+Input 1: [1, 2, 5], 5
+Output 1: 4
+#*******************************************************14
+def compare_swaps_bubble_insertion_sort(arr):
+    bubble_swaps = 0
+    a = arr[:]  
+    n = len(a)
+    for i in range(n):
+        for j in range(0, n - i - 1):
+            if a[j] > a[j + 1]:
+                a[j], a[j + 1] = a[j + 1], a[j]
+                bubble_swaps += 1
+
+    insertion_swaps = 0
+    b = arr[:]
+    for i in range(1, len(b)):
+        key = b[i]
+        j = i - 1
+        while j >= 0 and b[j] > key:
+            b[j + 1] = b[j]
+            insertion_swaps += 1
+            j -= 1
+        b[j + 1] = key
+    if insertion_swaps <= bubble_swaps:
+        return "insertion"
+    else:
+        return "bubble"
+Input 1: [5, 1, 4, 2, 8]
+Output 1: "insertion"
+
+#*******************************************************15
+# Lisa just got a new workbook. A workbook contains exercise problems...
+def count_special_problems(n: int, k: int, arr: list[int]) -> int:
+    page = 1
+    special_count = 0
+
+    for chapter in range(n):
+        problems = arr[chapter]
+        for problem in range(1, problems + 1):
+            if (problem - 1) % k == 0 and problem != 1:
+                page += 1
+            if problem == page:
+                special_count += 1
+
+        page += 1 if problems % k != 0 else problems // k - ((problems - 1) // k)
+    return special_count
+Input 1: 4, 2, [4, 2, 6, 1]
+Output 1: 2
+
+#*******************************************************16
+# Given two strings word1 and word2, return the minimum number of operations...
+def edit_distance(word1, word2):
+    m, n = len(word1), len(word2)
+
+    dp = [[0] * (n + 1) for _ in range(m + 1)]
+
+    for i in range(m + 1):
+        dp[i][0] = i
+    for j in range(n + 1):
+        dp[0][j] = j
+
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            if word1[i - 1] == word2[j - 1]:
+                dp[i][j] = dp[i - 1][j - 1]  
+            else:
+                dp[i][j] = min(
+                    dp[i - 1][j] + 1,  
+                    dp[i][j - 1] + 1,  
+                    dp[i - 1][j - 1] + 1  
+                )
+    return dp[m][n]
+Input 1: "horse", "ros"
+Output 1: 3
+
+#*******************************************************17
+# We define a harmonious array as an array where the difference between...
+def findLHS(nums: list[int]) -> int:
+    count = {}  
+
+    for num in nums:
+        if num in count:
+            count[num] += 1
+        else:
+            count[num] = 1
+    
+    max_length = 0
+
+    for num in count:
+        if num + 1 in count:  
+            max_length = max(max_length, count[num] + count[num + 1])
+    
+    return max_length
+Input 1: [1, 3, 2, 2, 5, 2, 3, 7]
+Output 1: 5
+#*******************************************************18
+# Our hero Teemo is attacking an enemy Ashe with poison attacks!
+def findPoisonedDuration(timeSeries: list[int], duration: int) -> int:
+    total_duration = 0
+
+    if not timeSeries:
+        return 0
+    
+    for i in range(1, len(timeSeries)):
+
+        total_duration += min(duration, timeSeries[i] - timeSeries[i - 1])
+
+    total_duration += duration
+    
+    return total_duration
+Input 1: [1, 4], 2
+Output 1: 4
+#*******************************************************19
+# Given two arrays of strings list1 and list2m find...least index sum...
+def find_common_strings_with_least_index_sum(list1: list[str], list2: list[str]) -> list[str]:
+    result = []
+    min_sum = 10000  
+    for i in range(len(list1)):
+        for j in range(len(list2)):
+            if list1[i] == list2[j]:
+                index_sum = i + j
+                if index_sum < min_sum:
+                    result = [list1[i]]
+                    min_sum = index_sum
+                elif index_sum == min_sum:
+                    result.append(list1[i])
+    return result
+Input 1: ["Shogun", "Tapioca Express", "Burger King", "KFC"], ["Piatti", "The Grill at Torrey Pines", "Hungry Hunter 
+Output 1: ["Shogun"]
+#*******************************************************20
+# Given an unsorted array of integers nums, return the length...increasing subsequence...
+def find_length_of_lcis(nums: list[int]) -> int:
+    if len(nums) == 0:
+        return 0
+    max_len = 1
+    current_len = 1
+
+    for i in range(1, len(nums)):
+        if nums[i] > nums[i - 1]:
+            current_len += 1
+            if current_len > max_len:
+                max_len = current_len
+        else:
+            current_len = 1
+    return max_len
+Input 1: [1, 3, 5, 4, 7]
+Output 1: 3
+
+#*******************************************************21
+# Given a non-empty array of non-negative integers nums, the degree...
+def find_shortest_subarray_with_degree(nums: list[int]) -> int:
+    count = {}         
+    first_index = {}   
+    last_index = {}    
+
+    for i in range(len(nums)):
+        num = nums[i]
+        if num not in count:
+            count[num] = 1
+            first_index[num] = i
+        else:
+            count[num] += 1
+        last_index[num] = i
+
+    max_count = 0
+    min_length = len(nums)
+
+    for num in count:
+        if count[num] > max_count:
+            max_count = count[num]
+            min_length = last_index[num] - first_index[num] + 1
+        elif count[num] == max_count:
+            length = last_index[num] - first_index[num] + 1
+            if length < min_length:
+                min_length = length
+    return min_length
+Input 1: [1, 2, 2, 3, 1]
+Output 1: 2
+
+#*******************************************************22
+# You are given an image presented by an m X n grid of integers image...
+def flood_fill(image: list[list[int]], sr: int, sc: int, color: int) -> list[list[int]]:
+    original_color = image[sr][sc]
+    if original_color == color:
+        return image
+    queue = [(sr, sc)]
+    while queue:
+        r, c = queue.pop(0)
+        image[r][c] = color
+
+        for nr, nc in [(r + 1, c), (r - 1, c), (r, c + 1), (r, c - 1)]:
+            if 0 <= nr < len(image) and 0 <= nc < len(image[0]) and image[nr][nc] == original_color:
+                queue.append((nr, nc))
+    
+    return image
+Input 1: [[2, 2, 2], [2, 2, 0], [2, 0, 1]], 1, 1, 2
+Output 1: [[2, 2, 2], [2, 2, 0], [2, 0, 1]]
+#*******************************************************23
+# Two players called P1 and P2 are playing a game with a starting number of stones.
+def gameOfStones(n: int) -> str:
+    if n % 7 in [0, 1]:
+        return "Second"
+    else:
+        return "First"
+Input 1: 1
+Output 1: "Second"
+#*******************************************************24
+# Happy Ladybugs is a board game having the following properties...
+def happyLadybugs(b: str) -> str:
+    if set(b) == {"_"}:
+        return "YES"
+    
+    if "_" in b:
+        for color in set(b):
+            if color != "_" and b.count(color) == 1:
+                return "NO" 
+        return "YES"
+
+    n = len(b)
+    for i in range(n):
+        if (i > 0 and b[i] == b[i-1]) or (i < n-1 and b[i] == b[i+1]):
+            continue
+        else:
+            return "NO"
+    return "YES"
+Input 1: "RBY_YBR"
+Output 1: "YES"
+#*******************************************************25
+# You wish to buy video games from the famous online...Mist.
+def howManyGames(p: int, d: int, m: int, s: int) -> int:
+    count = 0
+    current_price = p
+
+    while s >= current_price:
+        s -= current_price
+        count += 1
+        current_price = max(current_price - d, m)
+    return count
+Input 1: 20, 3, 6, 80
+Output 1: 6
+
+#*******************************************************26
+# Two friends like to pool their money and go to the ice cream parlor.
+def icecreamParlor(m: int, cost: list[int]) -> list[int]:
+    seen = {}  
+
+    for i in range(len(cost)):
+        price = cost[i]
+        find_price = m - price
+        if find_price in seen:
+
+            return [seen[find_price] + 1, i + 1]
+        seen[price] = i
+Input 1: 4, [1, 4, 5, 3, 2]
+Output 1: [1, 4]
+#*******************************************************27
+# One common task for computers is to sort data.
+def insert_into_sorted(arr: list[int]) -> None:
+    key = arr[-1]
+    i = len(arr) - 2
+
+    while i >= 0 and arr[i] > key:
+        arr[i + 1] = arr[i]
+        print(' '.join(map(str, arr)))
+        i -= 1
+
+    arr[i + 1] = key
+    print(' '.join(map(str, arr)))
+
+#*******************************************************28
+# Sherlock considers a string to be valid if all...the same number of times.
+def isValidStringSameOccurence(s: str) -> str:
+    freq = {} 
+
+    for ch in s:
+        if ch in freq:
+            freq[ch] += 1
+        else:
+            freq[ch] = 1
+
+    count_freq = {}  
+
+    for count in freq.values():
+        if count in count_freq:
+            count_freq[count] += 1
+        else:
+            count_freq[count] = 1
+
+    if len(count_freq) == 1:
+        return "YES" 
+    elif len(count_freq) == 2:
+        keys = list(count_freq.keys())
+        val1, val2 = keys[0], keys[1]
+
+        if (count_freq[val1] == 1 and (val1 - 1 == val2 or val1 == 1)) or \
+           (count_freq[val2] == 1 and (val2 - 1 == val1 or val2 == 1)):
+            return "YES"
+    return "NO"
+Input 1: "aabbcc"
+Output 1: "YES"
+#*******************************************************29
+# Given an array of integers arr, return true if...valid mountain array.
+def is_valid_mountain_array(arr: list[int]) -> bool:
+    n = len(arr)
+    if n < 3:
+        return False
+
+    i = 0
+
+    while i + 1 < n and arr[i] < arr[i + 1]:
+        i += 1
+
+    if i == 0 or i == n - 1:
+        return False
+
+    while i + 1 < n and arr[i] > arr[i + 1]:
+        i += 1
+
+    return i == n - 1
+Input 1: [2, 1]
+Output 1: false
+
+#*******************************************************30
+# You are given row X col grid...represents water.
+def island_perimeter(grid: list[list[int]]) -> int:
+    perimeter = 0
+    rows = len(grid)
+    cols = len(grid[0])
+
+    for i in range(rows):
+        for j in range(cols):
+            if grid[i][j] == 1:
+                
+                if i == 0 or grid[i-1][j] == 0:
+                    perimeter += 1
+               
+                if i == rows - 1 or grid[i+1][j] == 0:
+                    perimeter += 1
+                
+                if j == 0 or grid[i][j-1] == 0:
+                    perimeter += 1
+                
+                if j == cols - 1 or grid[i][j+1] == 0:
+                    perimeter += 1
+    return perimeter
+Input 1: [[0, 1, 0, 0], [1, 1, 1, 0], [0, 1, 0, 0], [0, 1, 0, 0]]
+Output 1: 14
+
+#*******************************************************31
+# There is a new mobile game that starts with consecutively numbered clouds. 
+def jumpingOnClouds(c):
+    jumps = 0
+    i = 0
+    while i < len(c) - 1:
+        if i + 2 < len(c) and c[i + 2] == 0:
+            i += 2
+        else:
+            i += 1
+        jumps += 1
+    return jumps
+Input 1: [0, 0, 1, 0, 0, 1, 0]
+Output 1: 4
+
+#*******************************************************32
+# Given an array of points...return the k closest points to the origin.
+def k_closest(points: list[list[int]], k: int) -> list[list[int]]:
+    for i in range(len(points)):
+        x, y = points[i]
+        points[i] = [x, y, x * x + y * y]
+
+    for i in range(len(points)):
+        for j in range(i + 1, len(points)):
+            if points[i][2] > points[j][2]:
+                points[i], points[j] = points[j], points[i]
+
+    result = []
+    for i in range(k):
+        result.append([points[i][0], points[i][1]])
+
+    return result
+Input 1: [[1, 3], [-2, 2], [5, 8], [0, 1]], 2
+Output 1: [[-2, 2], [0, 1]]
+
+#*******************************************************33
+def knapsack(weights, values, capacity):
+    n = len(weights)
+    dp = [[0 for _ in range(capacity + 1)] for _ in range(n + 1)]
+    for i in range(1, n + 1):
+        for w in range(1, capacity + 1):
+            if weights[i - 1] <= w:
+                dp[i][w] = max(
+                    values[i - 1] + dp[i - 1][w - weights[i - 1]],  
+                    dp[i - 1][w]                                  
+                )
+            else:
+                dp[i][w] = dp[i - 1][w]  
+
+    return dp[n][capacity]
+Input 1: [1, 2, 3], [6, 10, 12], 5
+Output 1: 22
+
+#*******************************************************34
+# You are given an unordered array of unique integers incrementing from 1.
+def largestPermutation(k: int, arr: list[int]) -> list[int]:
+    n = len(arr)
+    index_pos = [0] * (n + 1)
+    
+    for i in range(n):
+        index_pos[arr[i]] = i
+
+    for i in range(n):
+        if k == 0:
+            break
+
+        max_val = n - i
+
+        if arr[i] != max_val:
+            max_pos = index_pos[max_val]
+
+            index_pos[arr[i]] = max_pos
+            index_pos[max_val] = i
+
+            arr[i], arr[max_pos] = arr[max_pos], arr[i]
+
+            k -= 1
+
+    return arr
+Input 1: 2, [4, 3, 1, 2]
+Output 1: [4, 3, 2, 1]
+#*******************************************************35
+# Lena is preparing for an important coding competition...preliminary contests.
+def luckBalance(k: int, contests: list[list[int]]) -> int:
+    important = []
+    total_luck = 0
+
+    for luck, importance in contests:
+        if importance == 0:
+            total_luck += luck  
+        else:
+            important.append(luck)  
+
+    for i in range(len(important)):
+        for j in range(i + 1, len(important)):
+            if important[i] < important[j]:
+                important[i], important[j] = important[j], important[i]
+
+    for i in range(len(important)):
+        if i < k:
+            total_luck += important[i]
+        else:
+            total_luck -= important[i]
+
+    return total_luck
+Input 1: 2, [[5, 1], [1, 1], [4, 0]]
+Output 1: 10
+#*******************************************************36
+# In MATLAB, there is a handy function called reshape...keeping its original data.
+def matrixReshape(mat: list[list[int]], r: int, c: int) -> list[list[int]]:
+    rows = len(mat)
+    cols = len(mat[0])
+    
+    if rows * cols != r * c:
+        return mat  
+
+    flat = []
+    for i in range(rows):
+        for j in range(cols):
+            flat.append(mat[i][j])
+
+    new_mat = []
+    index = 0
+    for i in range(r):
+        row = []
+        for j in range(c):
+            row.append(flat[index])
+            index += 1
+        new_mat.append(row)
+    
+    return new_mat
+Input 1: [[1, 2], [3, 4]], 1, 4
+Output 1: [[1, 2, 3, 4]]
+
+#*******************************************************37
+# Given an array of bird sightings where every element represents a bird type...
+def migratoryBirds(arr):
+    count = {}  
+
+    for bird in arr:
+        if bird in count:
+            count[bird] += 1
+        else:
+            count[bird] = 1
+
+    max_count = 0
+    result = None
+
+    for bird_type in count:
+        if count[bird_type] > max_count:
+            max_count = count[bird_type]
+            result = bird_type
+        elif count[bird_type] == max_count and bird_type < result:
+            result = bird_type
+
+    return result
+Input 1: [1, 1, 2, 2, 3]
+Output 1: 1
+
+#*******************************************************38
+# You are given a 0-indexed n X n integer matrix grid...distinct integers...
+def min_path_cost(grid, moveCost):
+    rows = len(grid)
+    cols = len(grid[0])
+
+    dp = [[float('inf')] * cols for _ in range(rows)]
+
+    for j in range(cols):
+        dp[0][j] = grid[0][j]
+
+    for i in range(1, rows):
+        for j in range(cols):
+          
+            for k in range(cols):
+                dp[i][j] = min(dp[i][j], dp[i-1][k] + grid[i][j] + moveCost[grid[i-1][k]][j])
+
+    return min(dp[rows-1])
+Input 1: [[0, 1, 2], [3, 4, 5], [6, 7, 8]], [[1, 2, 3], [4, 5, 6], [7, 8, 9], [1, 1, 1], [1, 1, 1], [1, 1, 1], [1, 1,
+Output 1: 11
+
+#*******************************************************39
+# Given a m X n grid filled with non-negative numbers...along its path.
+def min_path_sum(grid):
+
+    for i in range(1, len(grid[0])):
+        grid[0][i] += grid[0][i-1]
+
+    for i in range(1, len(grid)):
+        grid[i][0] += grid[i-1][0]
+
+    for i in range(1, len(grid)):
+        for j in range(1, len(grid[0])):
+            grid[i][j] += min(grid[i-1][j], grid[i][j-1])
+
+    return grid[-1][-1]
+Input 1: [[1, 4, 5], [2, 7, 6], [6, 8, 7]]
+Output 1: 23
+#*******************************************************40
+# The distance between two array values is the number of indices between them.
+def minimum_distances(a: list[int]) -> int:
+    last_seen = {}
+    min_distance = float('inf')  
+
+    for i, num in enumerate(a):
+        if num in last_seen:
+
+            distance = i - last_seen[num]
+            min_distance = min(min_distance, distance)
+        last_seen[num] = i
+
+    return min_distance if min_distance != float('inf') else -1
+Input 1: [7, 1, 3, 4, 1, 7]
+Output 1: 3
+#*******************************************************41
+# Given two arrays of integers , find which elements in the second array are missing...
+def missingNumbers(arr: list[int], brr: list[int]) -> list[int]:
+    count_arr = {}
+    count_brr = {}
+
+    for num in arr:
+        count_arr[num] = count_arr.get(num, 0) + 1
+
+    for num in brr:
+        count_brr[num] = count_brr.get(num, 0) + 1
+
+    result = []
+    for num in count_brr:
+        if count_brr[num] > count_arr.get(num, 0):
+            result.append(num)
+
+    return sorted(result)
+Input 1: [203, 204, 205, 206, 207, 208, 203, 204, 205, 206], [203, 204, 204, 205, 206, 207, 205, 208, 203, 206, 205, 
+Output 1: [204, 205, 206]
+
+#*******************************************************42
+# Given an array of integers, find the longest subarray...less than or equal to 1.
+def pickingNumbers(a: list[int]) -> int:
+    freq = {}
+    for num in a:
+        freq[num] = freq.get(num, 0) + 1
+
+    max_length = 0
+    for num in freq:
+        current = freq[num]
+        if num + 1 in freq:
+            current += freq[num + 1]
+        max_length = max(max_length, current)
+
+    return max_length
+Input 1: [1, 2, 2, 3, 1, 2]
+Output 1: 5
+
+#*******************************************************43
+def quick_sort_partition(arr: list[int], low: int, high: int) -> int:
+    pivot = arr[high]
+    i = low - 1
+
+    for j in range(low, high):
+        if arr[j] <= pivot:
+            i += 1
+            arr[i], arr[j] = arr[j], arr[i]
+
+    arr[i + 1], arr[high] = arr[high], arr[i + 1]
+    return i + 1
+Input 1: [4, 2, 1, 5, 9, 7], 0, 5
+Output 1: 4
+
+#*******************************************************44
+# There is a string, s, of lowercase English letters...infinitely many times.
+def repeatedString(s: str, n: int) -> int:
+    count_a_in_s = s.count('a')
+    full_repeats = n // len(s)
+    remainder = n % len(s)
+
+    total_a = full_repeats * count_a_in_s + s[:remainder].count('a')
+    return total_a
+Input 1: "abcac", 10
+Output 1: 4
+#*******************************************************45
+# Given a string s, reverse the order of characters...initial word order.
+def reverse_characters_in_words(s: str) -> str:
+    result = []
+    word = ''
+    for char in s:
+        if char == ' ':
+            result.append(word[::-1])
+            result.append(' ')
+            word = ''
+        else:
+            word += char
+    result.append(word[::-1])  
+    return ''.join(result)
+Input 1: "Let's take LeetCode contest"
+Output 1: "s'teL ekat edoCteeL tsetnoc"
+#*******************************************************46
+# You are a professional robber planning to rob houses along the street.
+def rob(nums):
+    if not nums:
+        return 0
+    if len(nums) == 1:
+        return nums[0]
+
+    prev1 = prev2 = 0
+    for i in range(len(nums) - 1):
+        prev1, prev2 = prev2, max(prev2, prev1 + nums[i])
+    result1 = prev2
+
+    prev1 = prev2 = 0
+    for i in range(1, len(nums)):
+        prev1, prev2 = prev2, max(prev2, prev1 + nums[i])
+    result2 = prev2
+
+    return max(result1, result2)
+Input 1: [2, 3, 2]
+Output 1: 3
+#*******************************************************47
+# HackerLand University has the following grading policy...
+def round_grades(grades: list) -> list:
+    rounded_grades = []
+    for grade in grades:
+        if grade >= 38:
+            next_multiple_of_5 = ((grade // 5) + 1) * 5
+            if next_multiple_of_5 - grade < 3:
+                rounded_grades.append(next_multiple_of_5)
+            else:
+                rounded_grades.append(grade)
+        else:
+            rounded_grades.append(grade)
+    return rounded_grades
+Input 1: [84, 29, 57]
+Output 1: [85, 29, 57]
+#*******************************************************48
+# Reduce a string of lowercase characters in range...a series of operations.
+def superReducedString(s: str) -> str:
+    stack = []
+    for char in s:
+        if stack and stack[-1] == char:
+            stack.pop()  
+        else:
+            stack.append(char)  
+    return ''.join(stack) if stack else "Empty String"
+Input 1: "aab"
+Output 1: "b"
+#*******************************************************49
+# You are given an m X n integer array grid. There is a robot...top-left corner.
+def unique_paths_with_obstacles(obstacleGrid):
+    if not obstacleGrid or obstacleGrid[0][0] == 1:
+        return 0
+
+    m, n = len(obstacleGrid), len(obstacleGrid[0])
+
+    dp = [[0] * n for _ in range(m)]
+
+    dp[0][0] = 1
+    
+    for i in range(m):
+        for j in range(n):
+            if obstacleGrid[i][j] == 1:
+                dp[i][j] = 0 
+            elif i > 0:
+                dp[i][j] += dp[i-1][j]  
+            elif j > 0:
+                dp[i][j] += dp[i][j-1]  
+    return dp[m-1][n-1]
+Input 1: [[1, 1, 1], [1, 0, 1], [1, 1, 2]]
+Output 1: 0
+
+#*******************************************************50
+# Given a string s, return true if the s can be palindrome...
+def valid_palindrome(s: str) -> bool:
+    left, right = 0, len(s) - 1
+    while left < right:
+        if s[left] != s[right]:
+            i, j = left + 1, right
+            while i < j and s[i] == s[j]:
+                i += 1
+                j -= 1
+            if i >= j:
+                return True
+            i, j = left, right - 1
+            while i < j and s[i] == s[j]:
+                i += 1
+                j -= 1
+            return i >= j
+        left += 1
+        right -= 1
+    return True
+Input 1: "aba"
+Output 1: true
+#*******************************************************51
+# Given an array of integers arr, replace each element with its rank.
+def array_rank_transform(arr: list[int]) -> list[int]:
+    sorted_unique = sorted(set(arr))  
+    rank_map = {}
+    rank = 1  
+    for val in sorted_unique:
+        rank_map[val] = rank
+        rank += 1  
+    return [rank_map[val] for val in arr]
+Input 1: [40, 10, 20, 30]
+Output 1: [4, 1, 2, 3]
+#********************************************************52
+# You are given an array of unique integers salary...employee.
+def average_salary_excluding_min_max(salary: list[int]) -> float:
+    min_salary = min(salary)
+    max_salary = max(salary)
+    total = sum(salary)
+    total -= min_salary
+    total -= max_salary
+    count = len(salary) - 2
+    return total / count
+Input 1: [4000, 3000, 1000, 2000]
+Output 1: 2500.0
+#********************************************************53
+# There is a special keyboard with all keys in a single row.
+def calculate_typing_time(keyboard: str, word: str) -> int:
+    char_index = {char: idx for idx, char in enumerate(keyboard)}
+    current_position = 0
+    total_time = 0
+    for char in word:
+        next_position = char_index[char]
+        total_time += abs(next_position - current_position)
+        current_position = next_position  
+    return total_time
+Input 1: "abcdefghijklmnopqrstuvwxyz", "cba"
+Output 1: 4
+#********************************************************54
+# You are given two integer arrays of equal length target and arr.
+def can_be_equal(target: list[int], arr: list[int]) -> bool:
+    return sorted(target) == sorted(arr)
+Input 1: [1, 2, 3, 4], [2, 4, 1, 3]
+Output 1: true
+Input 2: [7], [7]
+#********************************************************55
+# Given an binary array nums and an integer k, return true...otherwise return false.
+def check_ones_distance(nums: list[int], k: int) -> bool:
+    prev = -1  
+    for i, num in enumerate(nums):
+        if num == 1:
+            if prev != -1 and i - prev - 1 < k:
+                return False
+            prev = i
+    return True
+Input 1: [1, 0, 0, 0, 1, 0, 0, 1], 2
+Output 1: true
+#********************************************************56
+# Given a binary string s, return true...or return false otherwise.
+def check_segment_length(s: str) -> bool:
+    max_ones = 0
+    max_zeros = 0
+    count = 1
+    for i in range(1, len(s)):
+        if s[i] == s[i - 1]:
+            count += 1
+        else:
+            if s[i - 1] == '1':
+                max_ones = max(max_ones, count)
+            else:
+                max_zeros = max(max_zeros, count)
+            count = 1 
+    if s[-1] == '1':
+        max_ones = max(max_ones, count)
+    else:
+        max_zeros = max(max_zeros, count)
+
+    return max_ones > max_zeros
+Input 1: "1101"
+Output 1: true
+#*******************************************************57
+# You are given an array coordinates...the coordinate of a point.
+def check_straight_line(coordinates: list[list[int]]) -> bool:
+    x0, y0 = coordinates[0]
+    x1, y1 = coordinates[1]
+    
+    for i in range(2, len(coordinates)):
+        x, y = coordinates[i]
+        if (y1 - y0) * (x - x1) != (y - y1) * (x1 - x0):
+            return False
+    return True
+Input 1: [[1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7]]
+Output 1: true
+#*******************************************************58
+# You are given a 0-indexed array of positive integers nums.
+def count_incremovable_subarrays(nums: list[int]) -> int:
+    def is_strictly_increasing(arr):
+        for i in range(1, len(arr)):
+            if arr[i] <= arr[i - 1]:
+                return False
+        return True
+    n = len(nums)
+    count = 0
+    for start in range(n):
+        for end in range(start, n):
+            new_arr = nums[:start] + nums[end + 1:]
+            if is_strictly_increasing(new_arr):
+                count += 1
+    return count
+Input 1: [1, 2, 3]
+Output 1: 6
+#*******************************************************59
+# Given a m X n matrix grid...return the number of negative numbers in grid.
+def count_negatives(grid: list[list[int]]) -> int:
+    m = len(grid)
+    n = len(grid[0])
+    row = 0
+    col = n - 1
+    count = 0
+    while row < m and col >= 0:
+        if grid[row][col] < 0:
+            count += (m - row)  
+            col -= 1
+        else:
+            row += 1
+    return count
+Input 1: [[4, 3, 2, -1], [3, 2, 1, -1], [1, 1, -1, -2], [-1, -1, -2, -3]]
+Output 1: 8
+#*******************************************************60
+# A diater consumes calories on the i-th day.
+def diet_plan_performance(calories: list[int], k: int, lower: int, upper: int) -> int:
+    total = sum(calories[:k])
+    points = 0
+    if total < lower:
+        points -= 1
+    elif total > upper:
+        points += 1
+    for i in range(k, len(calories)):
+        total += calories[i] - calories[i - k]
+        if total < lower:
+            points -= 1
+        elif total > upper:
+            points += 1
+    return points
+Input 1: [1, 2, 3, 4, 5], 1, 3, 3
+Output 1: 0
+#*******************************************************61
+# You are given a 2D integer array logs...i-th person.
+def earliest_year_with_maximum_population(logs: list[list[int]]) -> int:
+    years = [0] * 2051  
+
+    for birth, death in logs:
+        years[birth] += 1
+        years[death] -= 1
+
+    max_population = 0
+    current_population = 0
+    earliest_year = 1950
+
+    for year in range(1950, 2051):
+        current_population += years[year]
+        if current_population > max_population:
+            max_population = current_population
+            earliest_year = year
+
+    return earliest_year
+Input 1: [[1993, 1999], [2000, 2010]]
+Output 1: 1993
+#*******************************************************62
+# Alice and Bob have a different total number of candies.
+def fair_candy_swap(aliceSizes: list[int], bobSizes: list[int]) -> list[int]:
+    sumA = sum(aliceSizes)
+    sumB = sum(bobSizes)
+    diff = (sumB - sumA) // 2 
+
+    setB = set(bobSizes)  
+
+    for x in aliceSizes:
+        y = x + diff
+        if y in setB:
+            return [x, y]
+Input 1: [1, 1], [2, 2]
+Output 1: [1, 2]
+#*******************************************************63
+# Given three integer arrays arr1, arr2, and arr3 sorted...all three arrays.
+def find_common_elements(arr1: list[int], arr2: list[int], arr3: list[int]) -> list[int]:
+    i = j = k = 0
+    result = []
+    while i < len(arr1) and j < len(arr2) and k < len(arr3):
+        if arr1[i] == arr2[j] == arr3[k]:
+            result.append(arr1[i])
+            i += 1
+            j += 1
+            k += 1
+        else:
+            minimum = min(arr1[i], arr2[j], arr3[k])
+            if arr1[i] == minimum:
+                i += 1
+            if arr2[j] == minimum:
+                j += 1
+            if arr3[k] == minimum:
+                k += 1
+    return result
+Input 1: [1, 2, 3, 4, 5], [1, 2, 5, 7, 9], [1, 3, 4, 5, 8]
+Output 1: [1, 5]
+#*******************************************************64
+# You are given the array paths...from cityA to cityB.
+def find_destination_city(paths: list[list[str]]) -> str:
+    starts = set(path[0] for path in paths)
+    for path in paths:
+        if path[1] not in starts:
+            return path[1]
+Input 1: [["London", "New York"], ["New York", "Lima"], ["Lima", "Sao Paulo"]]
+Output 1: "Sao Paulo"
+#*******************************************************65
+# Given an initial array arr, every day you...previous day.
+def find_final_array(arr: list[int]) -> list[int]:
+    changed = True
+    while changed:
+        changed = False
+        i = 0
+        new_arr = []
+        while i < len(arr):
+            if i + 1 < len(arr) and arr[i] % 2 == 0 and arr[i+1] % 2 == 0:
+                new_arr.append(arr[i] + arr[i+1])
+                i += 2
+                changed = True
+            else:
+                new_arr.append(arr[i])
+                i += 1
+        arr = new_arr
+    return arr
+Input 1: [1, 6, 3, 4, 3, 5]
+Output 1: [1, 4, 4, 4, 4, 5]
+#*******************************************************66
+# In a town, there are n people labeled from 1 to n.
+def find_judge(n: int, trust: list[list[int]]) -> int:
+    if n == 1 and not trust:
+        return 1  
+    trust_counts = [0] * (n + 1)
+    trusted_someone = [False] * (n + 1)
+    for a, b in trust:
+        trusted_someone[a] = True
+        trust_counts[b] += 1
+    for person in range(1, n + 1):
+        if not trusted_someone[person] and trust_counts[person] == n - 1:
+            return person
+    return -1
+Input 1: 2, [[1, 2]]
+Output 1: 2
+#*******************************************************67
+# Given an array arr of positive integers sorted in a strictly increasing order...
+def find_kth_positive(arr: list[int], k: int) -> int:
+    missing_count = 0
+    current = 1
+    i = 0
+    n = len(arr)
+
+    while True:
+        if i < n and arr[i] == current:
+            i += 1
+        else:
+            missing_count += 1
+            if missing_count == k:
+                return current
+        current += 1
+Input 1: [2, 3, 4, 7, 11], 5
+Output 1: 9
+#*******************************************************68
+# Given an array nums of integers and integer k...return -1.
+def find_max_sum_less_than_k(nums: list[int], k: int) -> int:
+    nums.sort()  
+    left, right = 0, len(nums) - 1
+    max_sum = -1
+    
+    while left < right:
+        current_sum = nums[left] + nums[right]
+        if current_sum < k:
+            max_sum = max(max_sum, current_sum)
+            left += 1 
+        else:
+            right -= 1  
+    return max_sum
+Input 1: [34, 23, 1, 24, 75, 33, 54, 8], 60
+Output 1: 58
+#*******************************************************69
+# You are given two integers ,x and y...Cartesian grid.
+def find_nearest_valid_point(x: int, y: int, points: list[list[int]]) -> int:
+    min_dist = float('inf')
+    index = -1
+    for i, (px, py) in enumerate(points):
+        if px == x or py == y:
+            dist = abs(x - px) + abs(y - py)
+            if dist < min_dist:
+                min_dist = dist
+                index = i
+    return index
+Input 1: 3, 4, [[1, 2], [3, 1], [2, 4], [2, 3], [4, 4]]
+Output 1: 2
+#*******************************************************70
+# In some array arr, the values were in arithmetic progression...length - 1.
+def find_removed_value(arr: list[int]) -> int:
+    n = len(arr) + 1  
+    total_diff = arr[-1] - arr[0]
+    common_diff = total_diff // (n - 1)
+    for i in range(len(arr) - 1):
+        if arr[i+1] - arr[i] != common_diff:
+            return arr[i] + common_diff
+    return -1  
+Input 1: [5, 7, 11, 13]
+Output 1: 9
+#*******************************************************71
+# You are given an array nums of non-negative integers. nums is considered special.
+def find_special_integer(nums: list[int]) -> int:
+    n = len(nums)
+    for x in range(n + 1):
+        count = sum(num >= x for num in nums)
+        if count == x:
+            return x
+    return -1
+Input 1: [3, 5, 9]
+Output 1: 3
+#*******************************************************72
+# Given two integer arrays arr1 and arr2, and the integer d...
+def find_the_distance_value(arr1: list[int], arr2: list[int], d: int) -> int:
+    count = 0
+    for a in arr1:
+        if all(abs(a - b) > d for b in arr2):
+            count += 1
+    return count
+Input 1: [4, 5, 8], [10, 9, 1, 8], 2
+Output 1: 2
+#*******************************************************73
+# Given an integer n, add a dot (".")...
+def format_with_dots(n: int) -> str:
+    s = str(n)[::-1] 
+    parts = [s[i:i+3] for i in range(0, len(s), 3)] 
+    return '.'.join(parts)[::-1] 
+Input 1: 1000
+Output 1: "1.000"
+#*******************************************************74
+# Given two integer arrays nums1 and nums2, return an array of their intersection.
+def intersect_two_arrays(nums1: list[int], nums2: list[int]) -> list[int]:
+    res = []
+    for i in nums1:
+        if i in nums2:
+            res.append(x)
+            nums2.remove(x)
+    return res
+Input 1: [1, 1, 2, 2], [2, 2]
+Output 1: [2, 2]
+#*******************************************************75
+# Given an integer array nums sorted in non-decreasing order...false otherwise.
+def is_majority_element(nums: list[int], target: int) -> bool:
+    count = 0
+    for num in nums:
+        if num == target:
+            count += 1
+    return count > len(nums) // 2
+Input 1: [2, 4, 5, 5, 5, 5, 5, 6, 6], 5
+Output 1: true
+#*******************************************************76
+# Given a string path...one unit north, south, east, or west, respectively.
+def is_path_crossing(path: str) -> bool:
+    x, y = 0, 0
+    visited = {(x, y)}
+
+    for direction in path:
+        if direction == 'N':
+            y += 1
+        elif direction == 'S':
+            y -= 1
+        elif direction == 'E':
+            x += 1
+        elif direction == 'W':
+            x -= 1
+        if (x, y) in visited:
+            return True
+        visited.add((x, y))  
+    return False
+Input 1: "NES"
+Output 1: false
+#*******************************************************77
+# You are given an m X n binary matrix mat of 1's and 0's.
+def k_weakest_rows(mat: list[list[int]], k: int) -> list[int]:
+    soldiers_count = [(sum(row), i) for i, row in enumerate(mat)]
+    soldiers_count.sort(key=lambda x: (x[0], x[1]))
+    return [idx for _, idx in soldiers_count[:k]]
+Input 1: [[1, 1, 0, 0, 0], [1, 1, 1, 1, 0], [1, 0, 0, 0, 0], [1, 1, 0, 0, 0], [1, 1, 1, 1, 1]], 3
+Output 1: [2, 0, 3]
+#*******************************************************78
+# There are n kids with candies.
+def kids_with_candies(candies: list[int], extraCandies: int) -> list[bool]:
+    max_candies = max(candies)
+    return [c + extraCandies >= max_candies for c in candies]
+Input 1: [2, 3, 5, 1, 3], 3
+Output 1: [true, true, true, false, true]
+#*******************************************************79
+# Given an integer array nums and an integer k, modify the array in the following way.
+def largest_sum_after_k_negations(nums: list[int], k: int) -> int:
+    nums.sort()  
+    for i in range(len(nums)):
+        if k > 0 and nums[i] < 0:
+            nums[i] = -nums[i]
+            k -= 1
+    if k % 2 == 1:
+        nums.sort()
+        nums[0] = -nums[0]
+    return sum(nums)
+Input 1: [4, -2, 3], 1
+Output 1: 9
+#*******************************************************80
+# A newly designed keypad was tested...one at a time.
+def longest_duration_key(keysPressed: str, releaseTimes: list[int]) -> str:
+    max_duration = releaseTimes[0]
+    answer = keysPressed[0]
+
+    for i in range(1, len(releaseTimes)):
+        duration = releaseTimes[i] - releaseTimes[i - 1]
+        if duration > max_duration or (duration == max_duration and keysPressed[i] > answer):
+            max_duration = duration
+            answer = keysPressed[i]
+    return answer
+Input 1: "cbacaba", [9, 23, 33, 36, 46, 62, 68]
+Output 1: "b"
+#*******************************************************81
+# A string s is nice...uppercase and lowercase.
+def longest_nice_substring(s: str) -> str:
+    def is_nice(sub: str) -> bool:
+        chars = set(sub)
+        for c in chars:
+            if c.swapcase() not in chars:
+                return False
+        return True
+    max_len = 0
+    result = ""
+    for i in range(len(s)):
+        for j in range(i + 1, len(s) + 1):
+            substr = s[i:j]
+            if is_nice(substr) and len(substr) > max_len:
+                max_len = len(substr)
+                result = substr
+    return result
+Input 1: "YazaAay"
+Output 1: "aAa"
+#*******************************************************82
+# Given a string s, return the length...excluding the two characters.
+def longest_substring_between_equal_characters(s: str) -> int:
+    char_indices = {}
+    max_len = -1
+    for i, ch in enumerate(s):
+        if ch in char_indices:
+            max_len = max(max_len, i - char_indices[ch] - 1)
+        else:
+            char_indices[ch] = i
+    return max_len
+Input 1: "aa"
+Output 1: 0
+#*******************************************************83
+# Given a string s of lower and upper case English letters.
+def make_good(s: str) -> str:
+    stack = []
+    for ch in s:
+        if stack and abs(ord(stack[-1]) - ord(ch)) == 32:
+            stack.pop()
+        else:
+            stack.append(ch)
+    return ''.join(stack)
+Input 1: "leEeetcode"
+Output 1: "leetcode"
+#*******************************************************84
+# Given a string text, you want..."balloon" as possible.
+def max_balloons(text: str) -> int:
+    count = {'b': 0, 'a': 0, 'l': 0, 'o': 0, 'n': 0}
+    for ch in text:
+        if ch in count:
+            count[ch] += 1
+    count['l'] //= 2
+    count['o'] //= 2
+    return min(count.values())
+Input 1: "nlaebolko"
+Output 1: 1
+#*******************************************************85
+# You are given an integer array nums of length n...queries of length m.
+def max_subsequence_size(nums: list[int], queries: list[int]) -> list[int]:
+    nums.sort()
+    
+    prefix_sum = [0]
+    for num in nums:
+        prefix_sum.append(prefix_sum[-1] + num) 
+    res = []
+    for q in queries:
+        left, right = 0, len(prefix_sum) - 1
+        while left < right:
+            mid = (left + right + 1) // 2
+            if prefix_sum[mid] <= q:
+                left = mid
+            else:
+                right = mid - 1
+        res.append(left)
+    return res
+Input 1: [1, 2, 4, 5], [3, 10, 21]
+Output 1: [2, 3, 4]
+#*******************************************************86
+# Given an array nums of integers and integer k...sum < k.
+def max_sum_less_than_k(nums: list[int], k: int) -> int:
+    nums.sort()
+    l, r = 0, len(nums) - 1
+    res = -1
+    while l < r:
+        total = nums[l] + nums[r]
+        if total < k:
+            res = max(res, total)
+            l += 1
+        else:
+            r -= 1
+    return res
+Input 1: [34, 23, 1, 24, 75, 33, 54, 8], 60
+Output 1: 58
+#*******************************************************87
+# You are given an m X n integer grid accounts... j-th bank.
+def maximum_wealth(accounts: list[list[int]]) -> int:
+    max_wealth = 0
+    for customer in accounts:
+        wealth = sum(customer)
+        if wealth > max_wealth:
+            max_wealth = wealth
+    return max_wealth
+Input 1: [[1, 2, 3], [3, 2, 1]]
+Output 1: 6
+#*******************************************************88
+# You are given an integer array nums(0-indexed).
+def min_operations_to_make_strictly_increasing(nums: list[int]) -> int:
+    operations = 0
+    for i in range(1, len(nums)):
+        if nums[i] <= nums[i - 1]:
+            increase = nums[i - 1] - nums[i] + 1
+            nums[i] += increase
+            operations += increase
+    return operations
+Input 1: [1, 2, 3]
+Output 1: 0
+#*******************************************************89
+# Given a string s containing only lowercase English letters and the '?' character...
+def modify_string(s: str) -> str:
+    s = list(s)
+    for i in range(len(s)):
+        if s[i] == '?':
+            for c in 'abcdefghijklmnopqrstuvwxyz':
+                if (i > 0 and s[i - 1] == c) or (i < len(s) - 1 and s[i + 1] == c):
+                    continue
+                s[i] = c
+                break
+    return ''.join(s)
+Input 1: "?zs"
+Output 1: "azs"
+#*******************************************************90
+# You are given an array of characters letters...and a character target
+def next_greatest_letter(letters: list[str], target: str) -> str:
+    for letter in letters:
+        if letter > target:
+            return letter
+    return letters[0]
+Input 1: ["c", "f", "j"], "a"
+Output 1: "c"
+#*******************************************************91
+# There is an m X n matrix that is initialized to all 0's.
+def odd_cells(m: int, n: int, indices: list[list[int]]) -> int:
+    rowIncrements = [0] * m
+    colIncrements = [0] * n
+    for ri, ci in indices:
+        rowIncrements[ri] += 1
+        colIncrements[ci] += 1
+    count = 0
+    for r in range(m):
+        for c in range(n):
+            if (rowIncrements[r] + colIncrements[c]) % 2 == 1:
+                count += 1            
+    return count
+Input 1: 2, 3, [[0, 1], [1, 1]]
+Output 1: 6
+#*******************************************************92
+# The power of the string is the maximum length of a non-empty...unique character.
+def power_of_string(s: str) -> int:
+    max_length = 1
+    current_length = 1
+    for i in range(1, len(s)):
+        if s[i] == s[i - 1]:
+            current_length += 1
+            max_length = max(max_length, current_length)
+        else:
+            current_length = 1
+    return max_length
+Input 1: "leetcode"
+Output 1: 2
+#*******************************************************93
+# You are given an alphanumeric string s.
+def reformat_string(s: str) -> str:
+    letters = [ch for ch in s if ch.isalpha()]
+    digits = [ch for ch in s if ch.isdigit()]
+    if abs(len(letters) - len(digits)) > 1:
+        return ""
+    if len(letters) > len(digits):
+        long, short = letters, digits
+    else:
+        long, short = digits, letters
+    result = []
+    for i in range(len(short)):
+        result.append(long[i])
+        result.append(short[i])
+    if len(long) > len(short):
+        result.append(long[-1])
+    return "".join(result)
+Input 1: "a0b1c2"
+Output 1: "a0b1c2"
+#*******************************************************94
+# Given an array of positive integers arr, find a pattern...k or more times.
+def repeated_subarray_pattern(arr: list[int], m: int, k: int) -> bool:
+    n = len(arr)
+    for i in range(n - m * k + 1):
+        pattern = arr[i:i+m]
+        if all(arr[i + j*m : i + (j+1)*m] == pattern for j in range(k)):
+            return True
+    return False
+Input 1: [1, 2, 3, 1, 2, 3], 3, 2
+Output 1: true
+#*******************************************************95
+# Given an array arr, replace... and replace the last element with -1.
+def replace_elements_with_greatest_right(arr: list[int]) -> list[int]:
+    max_right = -1
+    for i in range(len(arr) - 1, -1, -1):
+        current = arr[i]
+        arr[i] = max_right
+        if current > max_right:
+            max_right = current
+    return arr
+Input 1: [18, 6, 6, 6, 1, -1]
+Output 1: [6, 6, 6, 1, -1, -1]
+#*******************************************************96
+# Given a 2D grid...You need to shift the grid k times.
+def shift_grid(grid: list[list[int]], k: int) -> list[list[int]]:
+    m, n = len(grid), len(grid[0])
+    total = m * n
+    flat = [grid[i][j] for i in range(m) for j in range(n)]
+    k = k % total
+    shifted = flat[-k:] + flat[:-k]
+    new_grid = []
+    for i in range(m):
+        row = shifted[i*n:(i+1)*n]
+        new_grid.append(row)
+    return new_grid
+Input 1: [[1, 2, 3], [4, 5, 6], [7, 8, 9]], 1
+Output 1: [[9, 1, 2], [3, 4, 5], [6, 7, 8]]
+#*******************************************************97
+# Given an array of integers nums... increasing order based on the frequency of the values.
+def sort_by_frequency(nums: list[int]) -> list[int]:
+    freq = {}
+    for num in nums:
+        freq[num] = freq.get(num, 0) + 1
+    return sorted(nums, key=lambda x: (freq[x], -x))
+Input 1: [1, 1, 2, 2, 2, 3]
+Output 1: [3, 1, 1, 2, 2, 2]
+#*******************************************************98
+# Given an integer array nums...the squares of each number sorted in non-decreasing order.
+def sorted_squares(nums: list[int]) -> list[int]:
+    return sorted([i**2 for i in nums])
+Input 1: [-4, -1, 0, 3, 10]
+Output 1: [0, 1, 9, 16, 100]
+#*******************************************************99
+# You are given an integer array nums. The unique elements...exactly once in the array.
+def sum_of_unique_elements(nums: list[int]) -> int:
+    freq = {}
+    for num in nums:
+        freq[num] = freq.get(num, 0) + 1
+    total = 0
+    for num, count in freq.items():
+        if count == 1:
+            total += num
+    return total
+Input 1: [1, 2, 3, 2, 5]
+Output 1: 9
+#*******************************************************100
+# Tic-Tac-Toe is played by two players...
+def tic_tac_toe_winner(moves: list[list[int]]) -> str:
+    board = [[' ']*3 for _ in range(3)]
+    players = ['X', 'O']
+    def check_win(player):
+        for i in range(3):
+            if all(board[i][j] == player for j in range(3)):
+                return True
+            if all(board[j][i] == player for j in range(3)):
+                return True
+        if all(board[i][i] == player for i in range(3)):
+            return True
+        if all(board[i][2 - i] == player for i in range(3)):
+            return True
+        return False
+    for i, move in enumerate(moves):
+        r, c = move
+        player = players[i % 2]
+        board[r][c] = player
+        if check_win(player):
+            return 'A' if player == 'X' else 'B'
+    if len(moves) == 9:
+        return "Draw"
+    else:
+        return "Pending"
+Input 1: [[0, 0], [2, 0], [1, 1], [2, 1], [2, 2]]
+Output 1: "A"P
+#*******************************************************101
+# A decimal number can be converted to its Hexspeak representation...
+def to_hexspeak(num: str) -> str:
+    hex_str = hex(num)[2:].upper() 
+    result = []
+    for ch in hex_str:
+        if ch == '0':
+            result.append('O')
+        elif ch == '1':
+            result.append('I')
+        elif ch in ['A','B','C','D','E','F']:
+            result.append(ch)
+        else:
+            return "ERROR"
+    return "".join(result)
+Input 1: "257"
+Output 1: "IOI"
+#*******************************************************102
+# You are given two arrays of integers, fruits and baskets...
+def unplaced_fruits(fruits: list[int], baskets: list[int]) -> int:
+    n = len(fruits)
+    used = [False] * n 
+    unplaced = 0
+
+    for fruit in fruits:
+        placed = False
+        for i in range(n):
+            if not used[i] and baskets[i] >= fruit:
+                used[i] = True
+                placed = True
+                break
+        if not placed:
+            unplaced += 1
+    return unplaced
+Input 1: [10, 20, 5], [15, 30, 5]
+Output 1: 0
